@@ -1,0 +1,62 @@
+<?php
+
+include_once 'includes/acme_misc.theme.inc';
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function acme_misc_theme_registry_alter(&$theme_registry) {
+  if (!empty($theme_registry['form_element'])) {
+    $theme_registry['form_element']['function'] = 'acme_misc_form_element';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ * Changes the Page Title of the add activity content type
+ */
+function acme_misc_form_alter(&$form, &$form_state, $form_id) {
+  // Changes the Page Title of the form used to add "Activity" content type
+  if (($form_id == 'activity_node_form') && (!isset($form['#node']->nid))) {
+    drupal_set_title(t('Upload New Teacher Activity'));
+  }
+
+  if (($form_id == 'user_profile_form')) {
+    $form['#after_build'][] = 'acme_misc_timezone_modify';
+  }
+}
+
+/**
+ * Call the new timezones for the user edit page
+ */
+function acme_misc_timezone_modify($form, &$form_state) {
+  $form['timezone']['timezone']['#options'] = _acme_misc_timezones();
+  return $form;
+}
+
+/**
+ * Custom Timezone display for ACME
+ * Generate an array of time zones and their local time&date.
+ *
+ * @param $blank
+ *   If evaluates true, prepend an empty time zone option to the array.
+ */
+function _acme_misc_timezones($blank = NULL) {
+  $zonelist = timezone_identifiers_list();
+  $zones = $blank ? array('' => t('- None selected -')) : array();
+  foreach ($zonelist as $zone) {
+    // Because many time zones exist in PHP only for backward compatibility
+    // reasons and should not be used, the list is filtered by a regular
+    // expression.
+    if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
+      $zones[$zone] = t('@zone: @date', array(
+        '@zone' => t(str_replace('_', ' ', $zone)),
+        '@date' => format_date(REQUEST_TIME, 'custom', 'D, n/j - h:ia', $zone)
+        )
+      );
+    }
+  }
+  // Sort the translated time zones alphabetically.
+  asort($zones);
+  return $zones;
+}

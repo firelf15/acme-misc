@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * Implements hook_update_N().
+ * Disables admin_views
+ */
+// snip, update_7000 by others
+
+/**
+ * Implements hook_update_N().
+ * Deletes field_other_materials from Activities content type.
+ */
+// snip, update_7001 by others
+
+/**
+ * Implements hook_update_N().
+ * Deletes add_to_cart from Science Kit content type.
+ */
+// snip, update_7002 by others
+
+/**
+ * Implements hook_update_N().
+ * Converts Learning Goal(s) Met field for Activities to text area.
+ */
+// snip, update_7003 by others
+
+
+/**
+ * Implements hook_update_N().
+ * Deletes field_standards_met from Activity content type.
+ */
+// snip, update_7004 by others
+
+/**
+ * Implements hook_update_N().
+ * Disables founding partner (Founder) accounts.
+ */
+// snip, update_7005 by others
+
+/**
+ * Implements hook_update_N().
+ * Disables the solar_background_topics module.
+ */
+function acme_misc_update_7006() {
+  module_disable(array('solar_background_topics'));
+  drupal_uninstall_modules(array('solar_background_topics'));
+}
+
+/**
+ * Implements hook_update_N().
+ * Deletes unnecessary links from user_menu.
+ */
+function acme_misc_update_7007() {
+  // 232 was My Materials List
+  // 235 was Messages
+  // 1531 was My Background Topics
+  $mlid = array('232','235','1531');
+  foreach ($mlid as $link) {
+    _menu_delete_item(db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $link))->fetchAssoc());
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * Enables the module_filter module
+ */
+// snip, update_7008 by others
+
+/**
+ * Implements hook_update_N().
+ * Disables the privatemsg module
+ */
+function acme_misc_update_7009() {
+  if (module_exists('privatemsg')) {
+    module_disable(array('privatemsg'));
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * Enable the Solar Slideshow feature, run a db_update for the Slick optionset
+ */
+// snip, update_7010 by others
+
+/**
+ * Implements hook_update_N().
+ * Remove Take a Tour section
+ */
+// snip, update_7011 by others
+
+/**
+ * Implements hook_update_N().
+ * Enables the entityqueue module
+ */
+// snip, update_7012 by others
+
+/**
+ * Implements hook_update_N().
+ * Deletes field_materials_used from Activities content type.
+ */
+// snip, update_7013 by others
+
+/**
+ * Implements hook_update_N().
+ * Enables the taxonomy_csv module
+ */
+// snip, update_7014 by others
+
